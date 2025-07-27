@@ -89,48 +89,51 @@ app.post("/api/contact", async (req, res) => {
       to: email,
       subject: "📬 We've received your message – Accelrix",
       html: `
-    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
-      <!-- Banner Image -->
-      <div style="text-align: center; background-color: #ffffff; border-radius: 8px 8px 0 0; overflow: hidden;">
-        <img src="cid:accelrixbanner" alt="Accelrix Banner" style="width: 100%; max-width: 600px; display: block; margin: 0 auto;" />
-      </div>
-
-      <!-- Content Box -->
-      <div style="background-color: #ffffff; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-
-        <h2 style="color: #007FFF;">Hi ${name},</h2>
-
-        <p style="font-size: 16px; line-height: 1.6;">
-          Thank you for reaching out to <strong>Accelrix</strong>! 🎉<br />
-          We’ve received your message and our team will get back to you as soon as possible. You can typically expect a response within 24–48 hours.
-        </p>
-
-        <p style="font-size: 16px; line-height: 1.6;">
-          In the meantime, feel free to explore more about what we offer on our website.
-        </p>
-
-        <a href="https://accelrix-buildbeyond.web.app" target="_blank" style="display: inline-block; margin-top: 20px; background-color: #007FFF; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px;">
-          Visit Accelrix Website
-        </a>
-
-        <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
-
-        <p style="font-size: 14px; color: #777;">
-          This is an automated response confirming that we've received your message. Our support team will reach out shortly.
-        </p>
-
-        <p style="font-size: 14px; color: #999; margin-top: 40px;">
-          — The Accelrix Team<br />
-          <a href="mailto:team@accelrix.in" style="color: #007FFF;">team@accelrix.in</a>
-        </p>
-      </div>
+    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; background-color: #f9f9f9; padding: 10px 15px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+      
+      <!-- Container -->
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <tr>
+          <td style="padding: 0; text-align: center; border-radius: 8px 8px 0 0; overflow: hidden;">
+            <img src="cid:accelrixbanner" alt="Accelrix Banner" width="100%" style="display: block; max-width: 600px; height: auto; border-radius: 8px 8px 0 0;" />
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 25px 30px;">
+            <h2 style="margin: 0 0 15px; color: #007FFF; font-size: 24px; line-height: 1.2;">Hi ${name},</h2>
+            
+            <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.5;">
+              Thank you for reaching out to <strong>Accelrix</strong>! 🎉<br />
+              We’ve received your message and our team will get back to you as soon as possible. You can typically expect a response within 24–48 hours.
+            </p>
+            
+            <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.5;">
+              In the meantime, feel free to explore more about what we offer on our website.
+            </p>
+            
+            <a href="https://accelrix-buildbeyond.web.app" target="_blank" style="display: inline-block; background-color: #007FFF; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 16px;">
+              Visit Accelrix Website
+            </a>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
+            
+            <p style="font-size: 14px; color: #777; margin: 0;">
+              This is an automated response confirming that we've received your message. Our support team will reach out shortly.
+            </p>
+            
+            <p style="font-size: 14px; color: #999; margin-top: 40px; line-height: 1.4;">
+              — The Accelrix Team<br />
+            </p>
+          </td>
+        </tr>
+      </table>
     </div>
   `,
       attachments: [
         {
-          filename: "banner.png", // Your banner image
-          path: "./assets/banner.png", // Adjust path as needed
-          cid: "accelrixbanner", // Must match cid in <img src="cid:...">
+          filename: "banner.png",
+          path: "./assets/banner.png",
+          cid: "accelrixbanner",
         },
       ],
     };
