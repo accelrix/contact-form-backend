@@ -8,10 +8,18 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
-app.use(bodyParser.json()); // 🔥 Needed for req.body
+// ✅ CORS: Only allow your frontend
+app.use(
+  cors({
+    origin: "https://accelrix-buildbeyond.web.app",
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
 
-// MongoDB connection
+app.use(bodyParser.json());
+
+// ✅ MongoDB connection
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
@@ -20,7 +28,7 @@ mongoose
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Mongoose schema
+// ✅ Mongoose schema
 const contactSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -31,12 +39,12 @@ const contactSchema = new mongoose.Schema({
 });
 const Contact = mongoose.model("Contact", contactSchema);
 
-// Health route
+// ✅ Health check route
 app.get("/", (req, res) => {
   res.send("Accelrix contact API is running 🚀");
 });
 
-// Contact POST route
+// ✅ Contact route
 app.post("/api/contact", async (req, res) => {
   const { name, email, phone, subject, message } = req.body;
 
