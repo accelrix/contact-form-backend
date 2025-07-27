@@ -88,47 +88,38 @@ app.post("/api/contact", async (req, res) => {
       from: `"Accelrix Team" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "📬 We've received your message – Accelrix",
-      html: `
-    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; background-color: #f9f9f9; padding: 10px 15px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
-      
-      <!-- Container -->
-      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+      html: `<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333333; background-color: #f9f9f9; padding: 10px 15px; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
         <tr>
-          <td style="padding: 0; text-align: center; border-radius: 8px 8px 0 0; overflow: hidden;">
+          <td style="padding: 0; text-align: center; border-radius: 8px 8px 0 0; overflow: visible;">
             <img src="cid:accelrixbanner" alt="Accelrix Banner" width="100%" style="display: block; max-width: 600px; height: auto; border-radius: 8px 8px 0 0;" />
           </td>
         </tr>
         <tr>
           <td style="padding: 25px 30px;">
-            <h2 style="margin: 0 0 15px; color: #007FFF; font-size: 24px; line-height: 1.2;">Hi ${name},</h2>
-            
-            <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.5;">
+            <h2 style="margin: 0 0 15px 0; color: #007FFF; font-size: 24px; line-height: 1.2;">Hi ${name},</h2>
+            <p style="margin: 0 0 16px 0; font-size: 16px; line-height: 1.5;">
               Thank you for reaching out to <strong>Accelrix</strong>! 🎉<br />
               We’ve received your message and our team will get back to you as soon as possible. You can typically expect a response within 24–48 hours.
             </p>
-            
-            <p style="margin: 0 0 20px; font-size: 16px; line-height: 1.5;">
+            <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.5;">
               In the meantime, feel free to explore more about what we offer on our website.
             </p>
-            
-            <a href="https://accelrix-buildbeyond.web.app" target="_blank" style="display: inline-block; background-color: #007FFF; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 16px;">
+            <a href="https://accelrix-buildbeyond.web.app" target="_blank" style="display: inline-block; background-color: #007FFF; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 16px;">
               Visit Accelrix Website
             </a>
-            
-            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
-            
-            <p style="font-size: 14px; color: #777; margin: 0;">
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eeeeee;" />
+            <p style="font-size: 14px; color: #777777; margin: 0;">
               This is an automated response confirming that we've received your message. Our support team will reach out shortly.
             </p>
-            
-            <p style="font-size: 14px; color: #999; margin-top: 40px; line-height: 1.4;">
+            <p style="font-size: 14px; color: #999999; margin-top: 40px; line-height: 1.4;">
               — The Accelrix Team<br />
+         
             </p>
           </td>
         </tr>
       </table>
-    </div>
-  `,
+    </div>`,
       attachments: [
         {
           filename: "banner.png",
