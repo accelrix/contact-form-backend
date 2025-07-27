@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // 🔥 Needed for req.body
 
 // MongoDB connection
 mongoose
@@ -20,7 +20,7 @@ mongoose
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// Contact Schema
+// Mongoose schema
 const contactSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -29,10 +29,14 @@ const contactSchema = new mongoose.Schema({
   message: String,
   createdAt: { type: Date, default: Date.now },
 });
-
 const Contact = mongoose.model("Contact", contactSchema);
 
-// POST route
+// Health route
+app.get("/", (req, res) => {
+  res.send("Accelrix contact API is running 🚀");
+});
+
+// Contact POST route
 app.post("/api/contact", async (req, res) => {
   const { name, email, phone, subject, message } = req.body;
 
@@ -43,11 +47,9 @@ app.post("/api/contact", async (req, res) => {
   }
 
   try {
-    // Store to DB
     const newMessage = new Contact({ name, email, phone, subject, message });
     await newMessage.save();
 
-    // Send Email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {

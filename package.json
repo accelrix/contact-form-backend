@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "gpush": "git add . && git commit -m \"$npm_config_msg\" && git push"
+    "gpush": "git add . && git commit -m \"quick commit\" && git push"
   },
   "keywords": [],
   "author": "",
