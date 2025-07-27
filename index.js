@@ -87,33 +87,50 @@ app.post("/api/contact", async (req, res) => {
     const autoReplyOptions = {
       from: `"Accelrix Team" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "🤝 Thanks for contacting Accelrix!",
+      subject: "📬 We've received your message – Accelrix",
       html: `
-    <div style="font-family: Arial, sans-serif;">
+    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
       <!-- Banner Image -->
-      <div style="text-align: center;">
+      <div style="text-align: center; background-color: #ffffff; border-radius: 8px 8px 0 0; overflow: hidden;">
         <img src="cid:accelrixbanner" alt="Accelrix Banner" style="width: 100%; max-width: 600px; display: block; margin: 0 auto;" />
       </div>
 
-      <!-- Content -->
-      <div style="padding: 20px; text-align: center;">
-        <h2 style="margin-bottom: 10px;">Hi ${name},</h2>
-        <p style="font-size: 16px;">Thank you for contacting <strong>Accelrix</strong>.</p>
-        <p style="font-size: 16px;">We’ve received your message and will get back to you soon.</p>
+      <!-- Content Box -->
+      <div style="background-color: #ffffff; max-width: 600px; margin: 0 auto; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
 
-        <p style="margin-top: 20px;">
-          Visit us: <a href="https://accelrix-buildbeyond.web.app" style="color: #007bff;">accelrix-buildbeyond.web.app</a>
+        <h2 style="color: #007FFF;">Hi ${name},</h2>
+
+        <p style="font-size: 16px; line-height: 1.6;">
+          Thank you for reaching out to <strong>Accelrix</strong>! 🎉<br />
+          We’ve received your message and our team will get back to you as soon as possible. You can typically expect a response within 24–48 hours.
         </p>
 
-        <p style="color: gray; margin-top: 30px;">– Accelrix Team</p>
+        <p style="font-size: 16px; line-height: 1.6;">
+          In the meantime, feel free to explore more about what we offer on our website.
+        </p>
+
+        <a href="https://accelrix-buildbeyond.web.app" target="_blank" style="display: inline-block; margin-top: 20px; background-color: #007FFF; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 6px;">
+          Visit Accelrix Website
+        </a>
+
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
+
+        <p style="font-size: 14px; color: #777;">
+          This is an automated response confirming that we've received your message. Our support team will reach out shortly.
+        </p>
+
+        <p style="font-size: 14px; color: #999; margin-top: 40px;">
+          — The Accelrix Team<br />
+          <a href="mailto:team@accelrix.in" style="color: #007FFF;">team@accelrix.in</a>
+        </p>
       </div>
     </div>
   `,
       attachments: [
         {
-          filename: "banner.png", // 🖼️ your banner image
-          path: "./assets/banner.png", // ✅ adjust path
-          cid: "accelrixbanner", // 👈 used in the HTML img src
+          filename: "banner.png", // Your banner image
+          path: "./assets/banner.png", // Adjust path as needed
+          cid: "accelrixbanner", // Must match cid in <img src="cid:...">
         },
       ],
     };
