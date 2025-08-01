@@ -87,12 +87,22 @@ const InternshipUser = mongoose.model(
 // Middleware to check API key in request headers
 function apiKeyMiddleware(req, res, next) {
   const apiKey = req.headers["x-api-key"];
+
   if (!apiKey) {
-    return res.status(401).json({ success: false, message: "Missing API key" });
+    return res.status(401).json({
+      success: false,
+      message: "Access denied. Authentication credentials are required.",
+    });
   }
+
   if (apiKey !== process.env.API_KEY) {
-    return res.status(403).json({ success: false, message: "Invalid API key" });
+    return res.status(403).json({
+      success: false,
+      message:
+        "Access denied. You do not have permission to access this resource.",
+    });
   }
+
   next();
 }
 
