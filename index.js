@@ -4,11 +4,13 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ CORS: Allow frontend domain
+// 1. CORS middleware - allow frontend domain
 app.use(
   cors({
     origin: "https://accelrix-buildbeyond.web.app",
@@ -17,7 +19,22 @@ app.use(
   })
 );
 
-app.use(bodyParser.json()); // For req.body
+// 2. Body parser middleware - parse JSON request bodies
+app.use(bodyParser.json());
+
+// 3. Helmet middleware - add security headers
+app.use(helmet());
+
+// 3. Helmet middleware - add security headers
+app.use(helmet());
+
+// 4. Rate limiter middleware - limit requests on /api routes
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute window
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again after a minute.",
+});
+app.use("/api/", limiter);
 
 // ✅ MongoDB connection
 mongoose
@@ -67,13 +84,25 @@ const InternshipUser = mongoose.model(
   "internship-users-2025"
 );
 
+// Middleware to check API key in request headers
+function apiKeyMiddleware(req, res, next) {
+  const apiKey = req.headers["x-api-key"];
+  if (!apiKey) {
+    return res.status(401).json({ success: false, message: "Missing API key" });
+  }
+  if (apiKey !== process.env.API_KEY) {
+    return res.status(403).json({ success: false, message: "Invalid API key" });
+  }
+  next();
+}
+
 // ✅ Health route
-app.get("/", (req, res) => {
+app.get("/", apiKeyMiddleware, (req, res) => {
   res.send("Accelrix contact API is running 🚀");
 });
 
 // ✅ POST /api/contact
-app.post("/api/contact", async (req, res) => {
+app.post("/api/contact", apiKeyMiddleware, async (req, res) => {
   const { name, email, phone, subject, message } = req.body;
 
   if (!name || !email || !subject || !message) {
@@ -171,7 +200,7 @@ app.post("/api/contact", async (req, res) => {
 // ✅ POST /api/interns/bulk-insert
 // POST /api/interns/bulk-insert
 // POST /api/interns/bulk-upsert
-app.post("/api/interns/bulk-upsert", async (req, res) => {
+app.post("/api/interns/bulk-upsert", apiKeyMiddleware, async (req, res) => {
   console.log("called ---> bulk-upsert");
 
   let docs = req.body.documents;
