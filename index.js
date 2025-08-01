@@ -37,7 +37,7 @@ const contactSchema = new mongoose.Schema({
   message: String,
   createdAt: { type: Date, default: Date.now },
 });
-const Contact = mongoose.model("Contact", contactSchema);
+const Contact = mongoose.model("Contact", contactSchema, "contact-us-form");
 
 const internshipUserSchema = new mongoose.Schema({
   email: { type: String, required: true },
@@ -228,7 +228,12 @@ app.get("/api/interns/verify", async (req, res) => {
   }
 
   try {
-    const intern = await InternshipUser.findOne({ internId }).lean();
+    // Find the intern by internId, but only select needed fields
+    const intern = await InternshipUser.findOne({ internId })
+      .select(
+        "fullName internshipTrack startDate endDate issueDate internId collegeName"
+      )
+      .lean();
 
     if (!intern) {
       return res
@@ -236,7 +241,18 @@ app.get("/api/interns/verify", async (req, res) => {
         .json({ success: false, message: "Intern not found" });
     }
 
-    res.status(200).json({ success: true, intern });
+    // Rename fields or send as is — if you want different keys, map them explicitly:
+    const response = {
+      name: intern.fullName,
+      domain: intern.internshipTrack,
+      startDate: intern.startDate,
+      endDate: intern.endDate,
+      issueDate: intern.issueDate,
+      internId: intern.internId,
+      college: intern.collegeName,
+    };
+
+    res.status(200).json({ success: true, intern: response });
   } catch (error) {
     console.error("Verify intern error:", error);
     res.status(500).json({ success: false, message: "Server error" });
