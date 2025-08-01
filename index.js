@@ -39,6 +39,30 @@ const contactSchema = new mongoose.Schema({
 });
 const Contact = mongoose.model("Contact", contactSchema);
 
+const internshipUserSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  fullName: String,
+  gender: String,
+  mobileNumber: String,
+  internshipTrack: String,
+  highestAcademicQualification: String,
+  collegeName: String,
+  passingYear: Number,
+  country: String,
+  joinedLinkedIn: String, // or Boolean if preferred
+  questions: String,
+  internId: { type: String, unique: true, required: true },
+  startDate: Date,
+  endDate: Date,
+  issueDate: Date,
+  offerLetterSentStatus: String, // or Boolean
+  internshipCompleted: String, // or Boolean
+  certificateSentStatus: String, // or Boolean
+  createdAt: { type: Date, default: Date.now },
+});
+
+const InternshipUser = mongoose.model("InternshipUser", internshipUserSchema);
+
 // ✅ Health route
 app.get("/", (req, res) => {
   res.send("Accelrix contact API is running 🚀");
@@ -137,6 +161,62 @@ app.post("/api/contact", async (req, res) => {
   } catch (error) {
     console.error("❌ Error:", error);
     res.status(500).json({ success: false, message: "Something went wrong." });
+  }
+});
+
+// ✅ POST /api/interns/bulk-insert
+// POST /api/interns/bulk-insert
+app.post("/api/interns/bulk-insert", async (req, res) => {
+  let docs = req.body.documents; // expect array of objects
+
+  if (!Array.isArray(docs) || docs.length === 0) {
+    return res
+      .status(400)
+      .json({ success: false, message: "No documents provided" });
+  }
+
+  // Convert date strings to Date objects if needed
+  docs = docs.map((doc) => ({
+    ...doc,
+    startDate: doc.startDate ? new Date(doc.startDate) : undefined,
+    endDate: doc.endDate ? new Date(doc.endDate) : undefined,
+    issueDate: doc.issueDate ? new Date(doc.issueDate) : undefined,
+  }));
+
+  try {
+    const result = await InternshipUser.insertMany(docs, { ordered: false }); // ordered:false continues on error
+    res.status(200).json({ success: true, insertedCount: result.length });
+  } catch (error) {
+    console.error("Bulk insert error:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Insert failed", error: error.message });
+  }
+});
+
+// GET /api/interns/verify?id=your_internId
+app.get("/api/interns/verify", async (req, res) => {
+  const internId = req.query.id;
+
+  if (!internId) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing intern ID" });
+  }
+
+  try {
+    const intern = await InternshipUser.findOne({ internId }).lean();
+
+    if (!intern) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Intern not found" });
+    }
+
+    res.status(200).json({ success: true, intern });
+  } catch (error) {
+    console.error("Verify intern error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
