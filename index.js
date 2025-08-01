@@ -61,7 +61,11 @@ const internshipUserSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const InternshipUser = mongoose.model("InternshipUser", internshipUserSchema);
+const InternshipUser = mongoose.model(
+  "InternshipUser",
+  internshipUserSchema,
+  "internship-users-2025"
+);
 
 // ✅ Health route
 app.get("/", (req, res) => {
@@ -167,7 +171,7 @@ app.post("/api/contact", async (req, res) => {
 // ✅ POST /api/interns/bulk-insert
 // POST /api/interns/bulk-insert
 app.post("/api/interns/bulk-insert", async (req, res) => {
-  let docs = req.body.documents; // expect array of objects
+  let docs = req.body.documents;
 
   if (!Array.isArray(docs) || docs.length === 0) {
     return res
@@ -175,7 +179,6 @@ app.post("/api/interns/bulk-insert", async (req, res) => {
       .json({ success: false, message: "No documents provided" });
   }
 
-  // Convert date strings to Date objects if needed
   docs = docs.map((doc) => ({
     ...doc,
     startDate: doc.startDate ? new Date(doc.startDate) : undefined,
@@ -184,7 +187,7 @@ app.post("/api/interns/bulk-insert", async (req, res) => {
   }));
 
   try {
-    const result = await InternshipUser.insertMany(docs, { ordered: false }); // ordered:false continues on error
+    const result = await InternshipUser.insertMany(docs, { ordered: false });
     res.status(200).json({ success: true, insertedCount: result.length });
   } catch (error) {
     console.error("Bulk insert error:", error);
