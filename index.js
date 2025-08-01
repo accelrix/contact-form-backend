@@ -257,7 +257,7 @@ app.post("/api/interns/bulk-upsert", apiKeyMiddleware, async (req, res) => {
 });
 
 // GET /api/interns/verify?id=your_internId
-app.get("/api/interns/verify", async (req, res) => {
+app.get("/api/interns/verify", apiKeyMiddleware, async (req, res) => {
   const internId = req.query.id;
 
   if (!internId) {
