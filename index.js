@@ -170,15 +170,18 @@ app.post("/api/contact", async (req, res) => {
 
 // ✅ POST /api/interns/bulk-insert
 // POST /api/interns/bulk-insert
-app.post("/api/interns/bulk-insert", async (req, res) => {
-  let docs = req.body.documents;
+// POST /api/interns/bulk-upsert
+app.post("/api/interns/bulk-upsert", async (req, res) => {
+  console.log("called ---> bulk-upsert");
 
+  let docs = req.body.documents;
   if (!Array.isArray(docs) || docs.length === 0) {
     return res
       .status(400)
       .json({ success: false, message: "No documents provided" });
   }
 
+  // Convert date strings to Date objects if needed
   docs = docs.map((doc) => ({
     ...doc,
     startDate: doc.startDate ? new Date(doc.startDate) : undefined,
@@ -187,13 +190,30 @@ app.post("/api/interns/bulk-insert", async (req, res) => {
   }));
 
   try {
-    const result = await InternshipUser.insertMany(docs, { ordered: false });
-    res.status(200).json({ success: true, insertedCount: result.length });
+    const bulkOps = docs.map((doc) => ({
+      updateOne: {
+        filter: { internId: doc.internId },
+        update: { $set: doc },
+        upsert: true,
+      },
+    }));
+
+    const result = await InternshipUser.bulkWrite(bulkOps);
+
+    res.status(200).json({
+      success: true,
+      message: `Bulk upsert completed`,
+      matchedCount: result.matchedCount,
+      modifiedCount: result.modifiedCount,
+      upsertedCount: result.upsertedCount,
+    });
   } catch (error) {
-    console.error("Bulk insert error:", error);
-    res
-      .status(500)
-      .json({ success: false, message: "Insert failed", error: error.message });
+    console.error("Bulk upsert error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Insert/Update failed",
+      error: error.message,
+    });
   }
 });
 
